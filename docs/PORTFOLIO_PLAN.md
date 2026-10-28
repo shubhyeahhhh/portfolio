@@ -25,6 +25,10 @@ codes, a founder who tells stories.
 - **Fix first:** the repo has two diverging copies of the site, committed build
   output, CDN scripts, no OG/SEO on the live copy, and no mobile tuning.
 - **Ship in 6 phases** (§10); each phase is deployable on its own.
+- **Decisions locked (§11):** the film (*Existential Evolution*) leads the
+  reel · the site exists to **win clients** · all footage is **real** · every
+  piece of content (copy, projects, media, order) is **swappable without
+  touching code** (§7.1).
 
 ---
 
@@ -114,6 +118,29 @@ read as three genres inside one film.
 - **Cyan is light, not paint.** Use the accent as rim light, timecode, cursor
   and focus — never as large fills.
 
+### 2.4 Positioning — built to win clients
+
+The film is the spectacle; the goal is a booked call. Every scene answers a
+buyer's question:
+
+| Buyer's question | Answered by |
+|---|---|
+| "Is this person good?" | Cold open + the reel, led by *Existential Evolution* |
+| "What can they make for **me**?" | Scene 5.5 · Services (new) |
+| "Have they done it for others?" | Case studies framed as *brief → cut → result*, client logos, testimonials |
+| "Can they handle the tech too?" | Act III + Sahara case study — the differentiator vs. other filmmakers |
+| "How do I start?" | Persistent `BOOK A CALL` chip in the nav after the hero + credits-roll CTA |
+
+Rules that follow from this:
+
+- **CTA everywhere it's earned:** nav chip (appears after Scene 1), end of
+  each case study ("Want a film like this?"), credits finale. One booking
+  link (Cal.com), one email fallback.
+- **Outcomes over adjectives:** every project shows 2–3 real numbers (views,
+  signups, reach, hires) in its Results block.
+- **Speed for busy visitors:** a "Skip to the reel" chip after the hero, and
+  the reel is reachable in one click from the nav.
+
 ---
 
 ## 3. Home page storyboard — scene by scene
@@ -184,6 +211,22 @@ Transitions between acts: **cut** (I → II, hard, with a 1-frame flash) and
   expands into the case-study hero while the route changes underneath
   (Podium). Back navigation reverses it.
 
+- **Order:** *Existential Evolution* is the **featured first card** — double
+  width, plays its trailer loop on entry, and is the default expanded state on
+  mobile. Remaining order comes from the content file (§7.1), so it can change
+  any time.
+
+### Scene 5.5 · Services — "What I can make for you" (new, client-facing)
+
+- Three cards, styled as **call sheets**, mapped to the three acts:
+  1. **Brand films & video essays** (Filmmaker)
+  2. **Content strategy & growth** (Entrepreneur)
+  3. **Product & web builds** — sites like this one (Tech Lead)
+- Each card: one-line promise, 3 deliverables, a "see example" link into the
+  matching case study, and the Book-a-Call button.
+- Motion: cards slate in with a clapper snap (`dur.snap`); hover lifts the card
+  and shows a 2 s loop from the linked project.
+
 ### Scene 6 · Rushes (Lab teaser)
 
 - Horizontal strip of 6–8 experiments / BTS clips (video essays, motion
@@ -221,8 +264,9 @@ Template (every case study follows the same "film" structure):
 8. **Next project** — a pinned teaser whose media grows as you scroll; at
    100 % it becomes the next case-study hero (infinite loop through work).
 
-Content lives in `src/content/work/*.json` (or Markdown front-matter) so new
-projects need no code.
+Content lives in `content/work/<slug>.json` (see §7.1) so new projects need
+no code. *Existential Evolution* is the first case study built and sets the
+template for the rest.
 
 ### 4.2 `/lab` — rushes & experiments
 
@@ -333,7 +377,8 @@ Remove the CDN `<script>` tags in `index.html:276-279`.
 ├─ work/<slug>/index.html     generated from content (or hand-written ×5)
 ├─ lab/index.html
 ├─ 404.html
-├─ public/                    videos/, frames/, images/, audio/, og-image.jpg, robots, sitemap
+├─ content/                   site.json, work/*.json, lab.json (§7.1 — all editable copy & media refs)
+├─ public/                    media/<slug>/, videos/, frames/, audio/, og-image.jpg, robots, sitemap
 ├─ src/
 │  ├─ main.js                 boot: lenis, gsap, barba, webgl, cursor, sound
 │  ├─ core/                   scroll.js, router.js, loader.js, sound.js, device.js
@@ -346,7 +391,6 @@ Remove the CDN `<script>` tags in `index.html:276-279`.
 │  │  ├─ post/                grain, rgbShift, unrender (dither/ascii)
 │  │  └─ transitions/         cut, dissolve, whip, iris, mosh, match, rewind
 │  ├─ components/             cursor.js, nav.js, workGrid.js, lightbox.js, timecodeHud.js
-│  ├─ content/work/*.json
 │  └─ styles/                 tokens.css, base.css, scenes/*.css
 ├─ docs/PORTFOLIO_PLAN.md
 └─ vite.config.mjs            multi-page inputs
@@ -403,6 +447,58 @@ Vercel section from the old README.
 
 **Copy rule:** every case study gets a one-line logline written like a film
 logline — this is the "sold with stories" half of the brand.
+
+All footage is **real** (decision §11). The existing shot list and look rules
+in `videos/README.md` become the shoot brief; the AI prompts there stay only as
+a reference for framing and lighting.
+
+### 7.1 Everything swappable — no code changes to update content
+
+Today only the 4 video slots auto-detect replacements. v2 extends that idea to
+**all** content:
+
+```
+content/
+├─ site.json          name, tagline, hero copy, manifesto, stats, services,
+│                     nav, socials, booking URL, SEO/OG text
+├─ work/
+│  ├─ existential-evolution.json   { order: 1, featured: true, title, logline,
+│  ├─ praatik-hires.json             role, year, client, results[], credits[],
+│  ├─ growthgates.json               media: { hero, loop, poster, gallery[] },
+│  ├─ sahara-prosthetics.json        sections[] }
+│  └─ baakhapaa-app.json
+└─ lab.json           [{ title, tag, loop, poster, note }]
+
+public/media/<slug>/  hero.mp4 · loop.mp4 · poster.jpg · 01.jpg …
+public/videos/        hero-orbit.mp4 · craft.mp4 · studio.mp4 · walk.mp4
+public/frames/hero/   generated from hero-orbit.mp4 by a script
+```
+
+How changes work:
+
+| To change… | Do this |
+|---|---|
+| A headline, stat, service or link | Edit `content/site.json` |
+| Which project leads the reel / the order | Change `order` / `featured` in the project JSON |
+| Add or remove a project | Add or delete one JSON file + its `public/media/<slug>/` folder |
+| Any video or image | Drop a new file with the **same name** into its folder |
+| The hero orbit | Replace `public/videos/hero-orbit.mp4`; `npm run frames` regenerates the frame sequence (also runs on Netlify build) |
+| Hide a project temporarily | `"draft": true` |
+
+Guarantees built into the code:
+
+- **Every media slot has a fallback** (poster → procedural placeholder, as
+  `MediaSlot` does today), so a missing or renamed file never breaks a page.
+- **A content check runs at build** (`npm run check:content`): validates JSON
+  shape, flags missing media and over-budget file sizes, and fails the deploy
+  on broken content instead of shipping it.
+- **Pages are generated** from the JSON at build time (Vite plugin), so
+  `/work/<slug>` and the sitemap update automatically.
+
+**Optional (Phase 5): edit from the browser.** Add **Decap CMS** at `/admin`
+(free, Git-based, works natively with Netlify Identity). It edits the same
+JSON files and uploads media, then commits to the repo — Netlify redeploys.
+No database, and the files above stay the source of truth.
 
 ---
 
@@ -487,6 +583,9 @@ Each phase ends deployable. Sizes: **S** ≈ 1–2 days, **M** ≈ 3–5, **L** 
 - [ ] Barba router with a plain `dissolve` CSS transition; `work/` and `lab/`
       stub pages.
 - [ ] Timecode HUD component replaces `°` readout + progress hairline.
+- [ ] Move all copy, stats, links and project data into `content/` (§7.1);
+      pages render from it; `check:content` runs in the Netlify build.
+- [ ] Nav `BOOK A CALL` chip + "Skip to the reel" chip (§2.4).
 - **Done when:** navigation between home ↔ stubs is seamless; Lenis and
   ScrollTrigger re-init cleanly per route.
 
@@ -515,7 +614,9 @@ Each phase ends deployable. Sizes: **S** ≈ 1–2 days, **M** ≈ 3–5, **L** 
 
 - [ ] WebGL work grid, hover distortion, list/grid toggle.
 - [ ] `match` transition grid → case study and back.
-- [ ] Case-study template + 5 projects from `content/work/*.json`.
+- [ ] Case-study template, built first with *Existential Evolution*, then the
+      other projects as their real content arrives (`draft: true` until ready).
+- [ ] Services section (Scene 5.5) linking into case studies.
 - [ ] "Next project" infinite loop.
 - **Done when:** every project is reachable, shareable (OG), and returns to
   the grid at the same scroll position.
@@ -525,6 +626,7 @@ Each phase ends deployable. Sizes: **S** ≈ 1–2 days, **M** ≈ 3–5, **L** 
 - [ ] `/lab` contact sheet + iris lightbox.
 - [ ] Howler sound system + toggle.
 - [ ] 404 "Scene missing".
+- [ ] Optional: Decap CMS at `/admin` for editing content from the browser.
 - [ ] Micro-interaction pass: cursor states, magnetic tuning, hover timing to
       §5.1 tokens.
 
@@ -544,19 +646,22 @@ Each phase ends deployable. Sizes: **S** ≈ 1–2 days, **M** ≈ 3–5, **L** 
 | # | Risk / decision | Default recommendation |
 |---|---|---|
 | 1 | **Footage is the critical path** — without the 4 hero clips the concept falls flat. | Produce assets in parallel with Phases 0–2; placeholders keep dev unblocked. |
-| 2 | Real shoot vs. AI-generated clips | Real shoot for hero + portrait (identity), AI acceptable for `studio`/`walk` backdrops. |
+| 2 | Real shoot needs planning (location, lighting, a gimbal/orbit rig for the 360° move) | ✅ Decided: all real footage. Book one shoot day covering all 4 clips + Lab BTS; keep placeholders live until files land. |
 | 3 | Scroll length fatigue (current home is ~10+ screens pinned) | Keep total home pin length ≤ ~1400 vh; add a "Skip to the reel" chip after the hero. |
 | 4 | Safari video-texture quirks | Frame sequence for anything scrubbed; test video textures early in Phase 2. |
 | 5 | Case-study content may not exist yet for every project | Launch with the 3 strongest (*Existential Evolution*, Sahara, Baakhapaa); others as "coming soon" rows. |
 | 6 | Sound can feel gimmicky | Off by default, subtle, one toggle. |
 
-**Questions for you before Phase 3:**
+**Decisions (confirmed 2026-10-28):**
 
-1. Which project is the hero of the reel — the film or a company?
-2. Do you want the site positioned to win **clients** (brand/content work) or
-   **roles** (creative technologist jobs)? It changes the CTA and the order of acts.
-3. Is a real shoot possible for the hero orbit and portrait?
-4. Netlify confirmed as the host?
+1. **Reel lead:** *Existential Evolution* — featured first card and first
+   case study built (Scene 5, §4.1).
+2. **Goal:** win **clients** — adds Services (Scene 5.5), nav Book-a-Call chip,
+   outcome-led case studies (§2.4).
+3. **Footage:** real content only (§7, risk 2).
+4. **Content must stay changeable** — JSON content + drop-in media + build-time
+   checks, optional Decap CMS (§7.1).
+5. **Host:** Netlify (already configured) unless you say otherwise.
 
 ---
 

@@ -45,9 +45,17 @@ export default function htmlPartials({ root }) {
     </div>`;
   }
 
+  // Video: { provider: youtube|vimeo|instagram|file, id | src, ratio? } — played by src/js/player.js.
+  const hasVideo = (v) => !!(v && (v.id || v.src));
+  const playAttr = (v, title) => ` data-play="${esc(JSON.stringify(v))}" data-play-title="${esc(title)}"`;
+  const isExternal = (href) => /^https?:/.test(href || '');
+
   // Projects without a case study yet render as non-links: no dead ends.
+  // A project with a video but no case study opens the player instead.
   const wrap = (p, cls, inner, extra = '') =>
-    p.href
+    hasVideo(p.video) && (!p.href || isExternal(p.href))
+      ? `<a class="${cls}" href="${esc(p.href || '#')}" data-cursor="Play"${playAttr(p.video, p.title)}${extra}>${inner}</a>`
+      : p.href
       ? `<a class="${cls}" href="${esc(p.href)}" data-cursor="${/^https?:/.test(p.href) ? 'Watch' : 'View'}"${/^https?:/.test(p.href) ? ' target="_blank" rel="noopener"' : ''}${extra}>${inner}</a>`
       : `<article class="${cls}"${extra}>${inner}</article>`;
 
@@ -141,6 +149,28 @@ export default function htmlPartials({ root }) {
         .join('')}</div></div>`;
   }
 
+  // Series: one card per episode. Plays in the player when a video is set,
+  // otherwise links out to the channel.
+  function episodes(p) {
+    const cards = p.episodes
+      .map((ep, n) => {
+        const no = String(n + 1).padStart(2, '0');
+        const body = `<span class="episode__no">EP${no}</span>
+          <span class="episode__title">${esc(ep.title || `Episode ${n + 1}`)}</span>
+          <span class="episode__cta">${hasVideo(ep.video) ? '▶ Play episode' : `Watch on ${esc(p.channelName || 'the channel')} ↗`}</span>`;
+        return hasVideo(ep.video)
+          ? `<a class="episode episode--${esc(p.tone || 'night')}" href="#" data-cursor="Play"${playAttr(ep.video, `${p.title} — EP${no}`)} data-reveal>${body}</a>`
+          : `<a class="episode episode--${esc(p.tone || 'night')}" href="${esc(p.channel || '#')}" target="_blank" rel="noopener" data-cursor="Watch" data-reveal>${body}</a>`;
+      })
+      .join('');
+    return `<section class="wrap section stack-l">
+      <div class="section-head"><div class="stack-s"><span class="eyebrow eyebrow--accent">The episodes</span>
+        <h2 class="h-section" data-split>${p.episodes.length} episodes. One thing left unsaid.</h2></div>
+        ${p.channel ? `<a class="link-arrow" href="${esc(p.channel)}" target="_blank" rel="noopener">${esc(p.channelName || 'Channel')}</a>` : ''}</div>
+      <div class="episodes">${cards}</div>
+    </section>`;
+  }
+
   function renderCase(slug, projects, site) {
     const i = projects.findIndex((p) => p.slug === slug);
     if (i < 0) throw new Error(`[html-partials] unknown case study "${slug}"`);
@@ -179,8 +209,10 @@ export default function htmlPartials({ root }) {
       <div class="media media--frame media--wide case-hero__media">
         ${media(p, { eager: true })}
         <span class="rec rec--on-dark"><span class="rec__dot"></span>SC.01</span>
+        ${hasVideo(p.video) ? `<button class="play-btn" type="button"${playAttr(p.video, p.title)} data-cursor="Play"><span class="play-btn__icon" aria-hidden="true"></span><span>Watch the ${esc(p.type.toLowerCase())}</span></button>` : ''}
       </div>
     </section>
+    ${Array.isArray(p.episodes) ? episodes(p) : ''}
     ${
       sections
         ? `<section class="wrap section story">${sections}</section>`

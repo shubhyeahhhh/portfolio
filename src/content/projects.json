@@ -16,7 +16,8 @@
       "loop": ""
     },
     "metrics": [],
-    "sections": []
+    "sections": [],
+    "video": null
   },
   {
     "slug": "maybe-i-never-confess",
@@ -27,12 +28,37 @@
     "line": "A five-episode series about an introvert guy and his best friend.",
     "tone": "plum",
     "motif": "confess",
-    "href": "https://instagram.com/shubheffects",
+    "href": "/work/maybe-i-never-confess/",
     "media": {
       "poster": "",
       "loop": ""
     },
-    "episodes": 5
+    "episodes": [
+      {
+        "title": "Episode 1",
+        "video": null
+      },
+      {
+        "title": "Episode 2",
+        "video": null
+      },
+      {
+        "title": "Episode 3",
+        "video": null
+      },
+      {
+        "title": "Episode 4",
+        "video": null
+      },
+      {
+        "title": "Episode 5",
+        "video": null
+      }
+    ],
+    "summary": "A five-episode series about an introvert guy and his best friend, published on @shubheffects.",
+    "channel": "https://instagram.com/shubheffects",
+    "channelName": "@shubheffects",
+    "video": null
   },
   {
     "slug": "sahara-prosthetics",

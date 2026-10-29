@@ -15,11 +15,13 @@ import { initMedia } from './media.js';
 import { initCursor } from './cursor.js';
 import { initHoverFx } from './hoverfx.js';
 import { mountMotifs } from './motifs.js';
+import { initPlayer } from './player.js';
 
 const boot = () => {
   initNav();
   initTransitions();
   initMedia();
+  initPlayer();
   mountMotifs();
   initPortrait(document.querySelector('[data-portrait]'));
   initWork(document.querySelector('[data-work]'));

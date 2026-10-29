@@ -27,6 +27,7 @@ Keep it updated when projects, pages or features change.
 | `/` | `index.html` | Hero (focus-pull portrait), selected work, services, process, about, CTA |
 | `/work/` | `work/index.html` | All projects: filters (Film · Series · Content · Product), list ↔ grid, hover preview |
 | `/work/existential-evolution/` | `work/existential-evolution/index.html` | Case study (rendered from `projects.json`) |
+| `/work/maybe-i-never-confess/` | `work/maybe-i-never-confess/index.html` | Series page with the five episodes |
 | `/services/` | `services/index.html` | Three offers, engagement models, FAQ |
 | `/about/` | `about/index.html` | Cinematic hero, three chapters, desk band, numbers, timeline, principles |
 | `/contact/` | `contact/index.html` | Brief form + direct lines |
@@ -43,7 +44,7 @@ the home page shows the featured project + the next four, `/work/` shows all).
 | # | Project | Type | Role | Year | Thumbnail motif | Link | Real media |
 |---|---|---|---|---|---|---|---|
 | 1 | **Existential Evolution** (featured) | Film | Writer · Director · Editor | _to add_ | `evolution` — phyllotaxis spiral | Case study `/work/existential-evolution/` | _to add_ |
-| 2 | **Maybe I Never Confess** | Series | Creator · @shubheffects | _to add_ | `confess` — two people, hesitant line, unsaid "…", EP1–EP5 strip | instagram.com/shubheffects (new tab) | _to add_ |
+| 2 | **Maybe I Never Confess** | Series | Creator · @shubheffects | _to add_ | `confess` — two people, hesitant line, unsaid "…", EP1–EP5 strip | Series page `/work/maybe-i-never-confess/` | _to add_ |
 | 3 | **Sahara Prosthetics** | Product | CTO · Product & engineering | 2024–25 | `mechanism` — rotating engineering wireframe | — | _to add_ |
 | 4 | **Baakhapaa** | Content | Content lead | 2023–now | `timeline` — edit timeline + waveform | — | _to add_ |
 | 5 | **Praatik Hires** | Content | Co-founder · Brand & strategy | 2024 | `network` — people connecting | — | _to add_ |
@@ -71,6 +72,25 @@ the home page shows the featured project + the next four, `/work/` shows all).
 | `media.poster` / `media.loop` | no | `/media/<slug>/poster.jpg` · `/media/<slug>/loop.mp4` (4–6 s, muted, ≤ 1.5 MB). Replaces the motif |
 | `sections` | no | Case-study story blocks: `[{ "label", "title", "text" }]` |
 | `metrics` | no | Results: `[{ "value", "label" }]` — shown only when present |
+| `video` | no | Full film/clip played in the full-screen player (see below). Adds "Watch the …" on the case study |
+| `episodes` | no | Series only: `[{ "title", "video" }]` — each card plays its video, or links to `channel` |
+| `channel`, `channelName` | no | Series only: where episodes live until their videos are added |
+
+### Adding playable videos
+
+Set `video` (on a project or an episode) to one of:
+
+```json
+{ "provider": "youtube",   "id": "VIDEO_ID" }
+{ "provider": "vimeo",     "id": "123456789" }
+{ "provider": "instagram", "id": "REEL_CODE", "ratio": "9:16" }
+{ "provider": "file",      "src": "/media/<slug>/film.mp4", "poster": "/media/<slug>/poster.jpg" }
+```
+
+- YouTube ID: the part after `watch?v=` (or after `youtu.be/`). Instagram reel code: the part after `/reel/`.
+- `file` videos go in `public/media/<slug>/` — H.264 MP4, ≤ 1080p; keep big films on YouTube/Vimeo instead (faster, free bandwidth).
+- The player loads nothing until someone presses play, and closing it stops playback.
+- Hover previews on cards are separate: `media.loop` (4–6 s silent MP4, ≤ 1.5 MB).
 
 **Rule:** project media must be real (stills, footage, product photos). No generated "product shots".
 
@@ -92,6 +112,7 @@ availability line, location, reply time, rates per service, socials, the four st
 | Custom cursor (View / Watch / Next) + magnetic buttons | fine pointers | `src/js/cursor.js` |
 | WebGL ripple + RGB-split hover on project media | project cards | `src/js/hoverfx.js` |
 | Live motion-graphic thumbnails (6 motifs, on-screen only) | project cards | `src/js/motifs.js` |
+| Full-screen video player (YouTube · Vimeo · Instagram · MP4) | `[data-play]` elements | `src/js/player.js` |
 
 Everything respects `prefers-reduced-motion` (motifs show a still frame; cursor, WebGL and smooth scroll are off).
 Performance check (headless Chromium): all six motifs animating at 60 fps; motif draw cost < 1 ms each.
@@ -110,6 +131,7 @@ Note: the home-hero portrait and the newer set don't look like the same face —
 
 ## 7. Open items
 
+- [ ] Video links for *Existential Evolution* and the 5 *Maybe I Never Confess* episodes (`video` fields)
 - [ ] Real stills / loops for every project (`public/media/<slug>/`)
 - [ ] Year + role confirmation for *Existential Evolution* and *Maybe I Never Confess*
 - [ ] Case-study write-ups (`sections`, `metrics`)

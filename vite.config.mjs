@@ -10,6 +10,7 @@ const pages = {
   home: 'index.html',
   work: 'work/index.html',
   existentialEvolution: 'work/existential-evolution/index.html',
+  maybeINeverConfess: 'work/maybe-i-never-confess/index.html',
   services: 'services/index.html',
   about: 'about/index.html',
   contact: 'contact/index.html',

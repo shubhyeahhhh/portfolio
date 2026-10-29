@@ -9,6 +9,7 @@ const PALETTES = {
   amber: { accent: '255,180,96', line: '255,238,214' },
   night: { accent: '122,162,255', line: '222,232,255' },
   teal: { accent: '95,224,204', line: '214,255,248' },
+  plum: { accent: '255,120,150', line: '255,228,236' },
 };
 
 // Small deterministic PRNG so a motif looks the same on every load.
@@ -58,11 +59,12 @@ const MOTIFS = {
       };
       ctx.lineWidth = Math.max(1, R / 160);
       const seg = 48;
+      // Depth-shaded segments, batched into 6 alpha buckets (one stroke each).
+      const buckets = Array.from({ length: 6 }, () => []);
       const stroke = (pts) => {
         for (let i = 1; i < pts.length; i++) {
-          const [x0, y0, z0] = pts[i - 1], [x1, y1, z1] = pts[i];
-          ctx.strokeStyle = rgba(c.line, 0.12 + 0.5 * ((z0 + z1) / 4 + 0.5));
-          ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+          const z = (pts[i - 1][2] + pts[i][2]) / 4 + 0.5;
+          buckets[Math.min(5, Math.max(0, Math.floor(z * 6)))].push(pts[i - 1], pts[i]);
         }
       };
       for (let la = -3; la <= 3; la++) { // latitudes
@@ -75,6 +77,13 @@ const MOTIFS = {
         for (let i = 0; i <= seg; i++) { const phi = (i / seg) * Math.PI * 2; pts.push(project(Math.cos(phi) * Math.cos(th), Math.sin(phi), Math.cos(phi) * Math.sin(th))); }
         stroke(pts);
       }
+      buckets.forEach((segs, b) => {
+        if (!segs.length) return;
+        ctx.strokeStyle = rgba(c.line, 0.12 + 0.5 * ((b + 0.5) / 6));
+        ctx.beginPath();
+        for (let i = 0; i < segs.length; i += 2) { ctx.moveTo(segs[i][0], segs[i][1]); ctx.lineTo(segs[i + 1][0], segs[i + 1][1]); }
+        ctx.stroke();
+      });
       // measuring ring with ticks, counter-rotating
       const ring = R * 1.28;
       ctx.strokeStyle = rgba(c.accent, 0.55);
@@ -168,6 +177,67 @@ const MOTIFS = {
     },
   },
 
+  // Maybe I Never Confess — two people drifting close and apart, linked by a
+  // hesitant dashed line; an unsaid "…" by the quieter one; five episodes play in turn.
+  confess: {
+    draw(ctx, w, h, t, c, s) {
+      const m = Math.min(w, h), u = m / 420;
+      // episode strip (EP1–EP5), the current episode lit
+      const eps = 5, left = w * 0.42, right = w * 0.94, top = h * 0.1, eh = h * 0.1, gap = w * 0.012;
+      const ew = (right - left - gap * (eps - 1)) / eps, cur = Math.floor(t / 4) % eps, prog = (t / 4) % 1;
+      ctx.font = `500 ${Math.round(10 * u)}px "IBM Plex Mono", monospace`;
+      ctx.textBaseline = 'top';
+      for (let i = 0; i < eps; i++) {
+        const x = left + i * (ew + gap);
+        ctx.fillStyle = rgba(c.line, i === cur ? 0.16 : 0.07);
+        ctx.beginPath(); ctx.roundRect(x, top, ew, eh, 4 * u); ctx.fill();
+        if (i < cur || i === cur) {
+          ctx.fillStyle = rgba(c.accent, i === cur ? 0.9 : 0.35);
+          ctx.fillRect(x, top + eh - 3 * u, ew * (i === cur ? prog : 1), 3 * u);
+        }
+        ctx.fillStyle = rgba(c.line, i === cur ? 0.9 : 0.4);
+        ctx.fillText(`EP${i + 1}`, x + 6 * u, top + 6 * u);
+      }
+      // the two of them
+      const cx = w * 0.68, cy = h * 0.5;
+      const d = m * (0.1 + 0.07 * (0.5 + 0.5 * Math.sin(t * 0.45)));
+      const a = t * 0.18;
+      const ax = cx - Math.cos(a) * d, ay = cy - Math.sin(a) * d * 0.5 + Math.sin(t * 0.9) * 4 * u; // introvert
+      const bx = cx + Math.cos(a) * d, by = cy + Math.sin(a) * d * 0.5 + Math.cos(t * 0.7) * 5 * u; // best friend
+      const near = 1 - Math.min(1, (Math.hypot(bx - ax, by - ay) - m * 0.2) / (m * 0.14));
+      ctx.setLineDash([5 * u, 7 * u]);
+      ctx.lineDashOffset = -t * 12 * u;
+      ctx.strokeStyle = rgba(c.accent, 0.12 + 0.45 * Math.max(0, near));
+      ctx.lineWidth = Math.max(1, 1.2 * u);
+      ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+      ctx.setLineDash([]);
+      // Glows are pre-rendered once into small sprites (gradients per frame are costly).
+      s.sprites ??= {};
+      const sprite = (rgb, r, al) => {
+        const key = `${rgb}|${Math.round(r)}|${al}`;
+        if (!s.sprites[key]) {
+          const size = Math.ceil(r * 8), cv = document.createElement('canvas');
+          cv.width = cv.height = size;
+          const g2 = cv.getContext('2d'), mid = size / 2, gr = g2.createRadialGradient(mid, mid, 0, mid, mid, mid);
+          gr.addColorStop(0, rgba(rgb, al * 0.5)); gr.addColorStop(1, rgba(rgb, 0));
+          g2.fillStyle = gr; g2.fillRect(0, 0, size, size);
+          g2.fillStyle = rgba(rgb, al); g2.beginPath(); g2.arc(mid, mid, r, 0, Math.PI * 2); g2.fill();
+          s.sprites[key] = cv;
+        }
+        return s.sprites[key];
+      };
+      const glow = (x, y, r, rgb, al) => { const sp = sprite(rgb, r, al); ctx.drawImage(sp, x - sp.width / 2, y - sp.height / 2); };
+      glow(ax, ay, 5 * u, c.line, 0.75);
+      glow(bx, by, 7 * u, c.accent, 1);
+      // the unsaid "…": three dots that pulse but never resolve
+      for (let i = 0; i < 3; i++) {
+        const p = 0.5 + 0.5 * Math.sin(t * 3 - i * 0.7);
+        ctx.fillStyle = rgba(c.line, 0.2 + 0.6 * p);
+        ctx.beginPath(); ctx.arc(ax - 10 * u + i * 9 * u, ay - 22 * u - p * 2 * u, 2.2 * u, 0, Math.PI * 2); ctx.fill();
+      }
+    },
+  },
+
   // GrowthGates — particles rising through a series of gates (arches).
   growth: {
     init(w, h, r) {
@@ -210,9 +280,20 @@ function size(cv) {
 }
 
 function paint(cv, t) {
-  const { ctx, motif, pal, state } = cv.__m;
+  const m = cv.__m, { ctx } = m;
   ctx.clearRect(0, 0, cv.width, cv.height);
-  motif.draw(ctx, cv.width, cv.height, t, pal, state);
+  m.motif.draw(ctx, cv.width, cv.height, t, m.pal, m.state);
+  // Fade the motif out toward the title (bottom-left) so the type stays clean.
+  if (!m.fade || m.fadeH !== cv.height) {
+    m.fade = ctx.createLinearGradient(0, cv.height * 0.42, 0, cv.height * 0.9);
+    m.fade.addColorStop(0, 'rgba(0,0,0,0)');
+    m.fade.addColorStop(1, 'rgba(0,0,0,1)');
+    m.fadeH = cv.height;
+  }
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.fillStyle = m.fade;
+  ctx.fillRect(0, cv.height * 0.42, cv.width, cv.height * 0.58);
+  ctx.globalCompositeOperation = 'source-over';
 }
 
 function loop(now) {

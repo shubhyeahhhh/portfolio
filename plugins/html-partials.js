@@ -48,7 +48,7 @@ export default function htmlPartials({ root }) {
   // Projects without a case study yet render as non-links: no dead ends.
   const wrap = (p, cls, inner, extra = '') =>
     p.href
-      ? `<a class="${cls}" href="${esc(p.href)}" data-cursor="View"${extra}>${inner}</a>`
+      ? `<a class="${cls}" href="${esc(p.href)}" data-cursor="${/^https?:/.test(p.href) ? 'Watch' : 'View'}"${/^https?:/.test(p.href) ? ' target="_blank" rel="noopener"' : ''}${extra}>${inner}</a>`
       : `<article class="${cls}"${extra}>${inner}</article>`;
 
   const renderers = {
@@ -74,6 +74,7 @@ export default function htmlPartials({ root }) {
     grid(projects) {
       return projects
         .filter((p) => !p.featured)
+        .slice(0, 4) // home shows four; /work shows everything
         .map((p) =>
           wrap(
             p,
@@ -248,6 +249,7 @@ export default function htmlPartials({ root }) {
     );
 
     html = html.replace(/\{\{\s*year\s*\}\}/g, String(new Date().getFullYear()));
+    html = html.replace(/\{\{\s*projectCount\s*\}\}/g, String(projects.length));
     html = html.replace(/\{\{\s*site\.([\w.]+)\s*\}\}/g, (_, path) => {
       const v = get(site, path);
       if (v == null) throw new Error(`[html-partials] missing site.${path} in src/content/site.json`);

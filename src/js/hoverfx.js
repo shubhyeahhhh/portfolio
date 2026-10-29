@@ -45,16 +45,51 @@ const TONES = {
   steel: { a: '#1d1f2b', b: '#14161e', c: '#0c0e12', glow: 'rgba(109,126,168,0.30)', gx: 0.8, gy: 0.1 },
   amber: { a: '#2a2018', b: '#1c1814', c: '#0f1115', glow: 'rgba(255,176,92,0.25)', gx: 0.8, gy: 0.1 },
   night: { a: '#1b2633', b: '#151b24', c: '#0e1116', glow: 'rgba(79,123,214,0.25)', gx: 0.8, gy: 0.1 },
+  plum: { a: '#2a1a26', b: '#1c141c', c: '#100d13', glow: 'rgba(255,110,140,0.22)', gx: 0.8, gy: 0.1 },
   teal: { a: '#15282a', b: '#111b1d', c: '#0d1013', glow: 'rgba(63,193,176,0.25)', gx: 0.8, gy: 0.1 },
 };
 
-function drawTitleCard(media, card, cv = document.createElement('canvas')) {
+// Layout (sizes, fonts, wrapped lines) is measured once per card and cached, so the
+// per-frame repaint for live motifs only draws — no style or layout reads.
+const layouts = new WeakMap();
+function layoutTitleCard(media, card) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const box = media.getBoundingClientRect();
   const w = Math.round(box.width * dpr), h = Math.round(box.height * dpr);
+  const measure = document.createElement('canvas').getContext('2d');
+  const text = (el, color) => {
+    if (!el) return null;
+    const cs = getComputedStyle(el);
+    const r = el.getBoundingClientRect();
+    const lh = (parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.1) * dpr;
+    const font = `${cs.fontWeight} ${parseFloat(cs.fontSize) * dpr}px ${cs.fontFamily}`;
+    const spacing = `${(parseFloat(cs.letterSpacing) || 0) * dpr}px`;
+    measure.font = font;
+    if ('letterSpacing' in measure) measure.letterSpacing = spacing;
+    const maxW = r.width * dpr + 2, lines = [];
+    let line = '';
+    for (const word of el.textContent.trim().split(/\s+/)) {
+      const test = line ? `${line} ${word}` : word;
+      if (line && measure.measureText(test).width > maxW) { lines.push(line); line = word; } else line = test;
+    }
+    lines.push(line);
+    const x = (r.left - box.left) * dpr, y0 = (r.top - box.top) * dpr;
+    return { font, spacing, color, lines: lines.map((l, i) => [l, x, y0 + lh * (i + 0.5)]) };
+  };
+  const plan = {
+    w, h,
+    tone: TONES[(card.className.match(/titlecard--(\w+)/) || [])[1]] || TONES.night,
+    texts: [text(card.querySelector('.titlecard__meta'), 'rgba(255,255,255,0.7)'), text(card.querySelector('.titlecard__title'), '#ffffff')].filter(Boolean),
+  };
+  layouts.set(card, plan);
+  return plan;
+}
+
+function drawTitleCard(media, card, cv = document.createElement('canvas')) {
+  const plan = layouts.get(card) || layoutTitleCard(media, card);
+  const { w, h, tone } = plan;
   if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
   const ctx = cv.getContext('2d');
-  const tone = TONES[(card.className.match(/titlecard--(\w+)/) || [])[1]] || TONES.night;
 
   const lin = ctx.createLinearGradient(0, 0, w, h);
   lin.addColorStop(0, tone.a); lin.addColorStop(0.55, tone.b); lin.addColorStop(1, tone.c);
@@ -63,40 +98,17 @@ function drawTitleCard(media, card, cv = document.createElement('canvas')) {
   rad.addColorStop(0, tone.glow); rad.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = rad; ctx.fillRect(0, 0, w, h);
 
-  // Live motion graphic (motifs.js), faded toward the title like its CSS mask.
+  // Live motion graphic (motifs.js) — already faded toward the title.
   const fx = card.querySelector('.titlecard__fx');
-  if (fx && fx.width > 1) {
-    ctx.drawImage(fx, 0, 0, w, h);
-    const fade = ctx.createLinearGradient(0, h, 0, h * 0.42);
-    fade.addColorStop(0.1, tone.c); fade.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.globalAlpha = 0.85; ctx.fillStyle = fade; ctx.fillRect(0, h * 0.42, w, h * 0.58); ctx.globalAlpha = 1;
-  }
+  if (fx && fx.width > 1) ctx.drawImage(fx, 0, 0, w, h);
 
-  // Re-set the card's text exactly where the DOM put it.
-  const drawText = (el, color) => {
-    if (!el) return;
-    const cs = getComputedStyle(el);
-    const r = el.getBoundingClientRect();
-    const size = parseFloat(cs.fontSize) * dpr;
-    const lh = (parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.1) * dpr;
-    ctx.font = `${cs.fontWeight} ${size}px ${cs.fontFamily}`;
-    if ('letterSpacing' in ctx) ctx.letterSpacing = `${(parseFloat(cs.letterSpacing) || 0) * dpr}px`;
+  ctx.textBaseline = 'middle';
+  plan.texts.forEach(({ font, spacing, color, lines }) => {
+    ctx.font = font;
+    if ('letterSpacing' in ctx) ctx.letterSpacing = spacing;
     ctx.fillStyle = color;
-    ctx.textBaseline = 'middle';
-    const maxW = r.width * dpr + 2;
-    const lines = [];
-    let line = '';
-    for (const word of el.textContent.trim().split(/\s+/)) {
-      const test = line ? `${line} ${word}` : word;
-      if (line && ctx.measureText(test).width > maxW) { lines.push(line); line = word; } else line = test;
-    }
-    lines.push(line);
-    const x = (r.left - box.left) * dpr;
-    const y0 = (r.top - box.top) * dpr;
-    lines.forEach((l, i) => ctx.fillText(l, x, y0 + lh * (i + 0.5)));
-  };
-  drawText(card.querySelector('.titlecard__meta'), 'rgba(255,255,255,0.7)');
-  drawText(card.querySelector('.titlecard__title'), '#ffffff');
+    lines.forEach(([l, x, y]) => ctx.fillText(l, x, y));
+  });
   return cv;
 }
 
@@ -142,7 +154,8 @@ export function initHoverFx() {
   const state = { hover: 0, mx: 0.5, my: 0.5, tx: 0.5, ty: 0.5 };
   let active = null; // the .media element the canvas currently lives in
   let source = null; // image/video/canvas used as the texture
-  let live = null; // title card with a live motif: recomposited every frame
+  let live = null; // title card with a live motif: recomposited every other frame
+  let frame = 0;
   let raf = 0;
   const cache = new WeakMap();
 
@@ -154,7 +167,7 @@ export function initHoverFx() {
     state.mx += (state.tx - state.mx) * 0.12;
     state.my += (state.ty - state.my) * 0.12;
     if (source instanceof HTMLVideoElement && source.readyState >= 2) upload();
-    else if (live) { drawTitleCard(active, live, source); upload(); }
+    else if (live && (frame++ & 1) === 0) { drawTitleCard(active, live, source); upload(); }
     gl.uniform2f(u.uMouse, state.mx, 1 - state.my);
     gl.uniform1f(u.uHover, state.hover);
     gl.uniform1f(u.uTime, t / 1000);
@@ -220,5 +233,5 @@ export function initHoverFx() {
   });
 
   // Text metrics change if fonts load late or the window resizes: redraw next time.
-  window.addEventListener('resize', () => targets.forEach((m) => cache.delete(m)), { passive: true });
+  window.addEventListener('resize', () => targets.forEach((m) => { cache.delete(m); const c = m.querySelector('.titlecard'); if (c) layouts.delete(c); }), { passive: true });
 }

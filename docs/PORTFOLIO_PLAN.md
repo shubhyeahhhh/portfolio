@@ -1,3 +1,5 @@
+> **Historical:** this is the original v1 plan. The built site follows the v2 "Story, engineered." direction — see `docs/PROJECT_DETAILS.md`.
+
 # Portfolio v2 — "The Final Cut"
 
 A plan for turning the current one-page scroll site into a premium, highly

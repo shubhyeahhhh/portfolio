@@ -46,7 +46,7 @@ export default function htmlPartials({ root }) {
   // Projects without a case study yet render as non-links: no dead ends.
   const wrap = (p, cls, inner, extra = '') =>
     p.href
-      ? `<a class="${cls}" href="${esc(p.href)}"${extra}>${inner}</a>`
+      ? `<a class="${cls}" href="${esc(p.href)}" data-cursor="View"${extra}>${inner}</a>`
       : `<article class="${cls}"${extra}>${inner}</article>`;
 
   const renderers = {
@@ -154,7 +154,7 @@ export default function htmlPartials({ root }) {
       <dl class="facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
     </section>
     <section class="wrap">
-      <div class="media media--frame media--wide case-hero__media" data-unclip>
+      <div class="media media--frame media--wide case-hero__media">
         ${media(p, { eager: true })}
         <span class="rec rec--on-dark"><span class="rec__dot"></span>SC.01</span>
       </div>
@@ -179,7 +179,7 @@ export default function htmlPartials({ root }) {
     </section>
     ${
       next
-        ? `<a class="next" href="${esc(next.href)}"><span class="wrap next__inner"><span class="stack-s"><span class="eyebrow">Next project</span><span class="next__title">${esc(next.title)} →</span></span></span></a>`
+        ? `<a class="next" href="${esc(next.href)}" data-cursor="Next"><span class="wrap next__inner"><span class="stack-s"><span class="eyebrow">Next project</span><span class="next__title">${esc(next.title)} →</span></span></span></a>`
         : `<a class="next" href="/work/"><span class="wrap next__inner"><span class="stack-s"><span class="eyebrow">Keep watching</span><span class="next__title">All work →</span></span></span></a>`
     }`;
   }

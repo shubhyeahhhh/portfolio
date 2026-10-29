@@ -36,3 +36,15 @@ public/              images, favicon, OG image, robots, sitemap
 
 The contact form uses Netlify Forms (`data-netlify="true"`); submissions appear in the Netlify dashboard.
 All motion respects `prefers-reduced-motion`.
+
+## Motion & interaction
+
+- **Page transitions**: native cross-document View Transitions (`src/styles/transitions.css`) — old page recedes, new page rises; a clicked project's media morphs into the case-study hero. Unsupported browsers navigate instantly.
+- **Opening slate**: home page, first visit per session (`src/js/intro.js`).
+- **Custom cursor + magnetic buttons**: mouse/pen only; label comes from `data-cursor="…"` (`src/js/cursor.js`).
+- **Scroll velocity**: roles ticker speed/direction and a slight lean on `[data-velocity]` blocks (`src/js/velocity.js`).
+- **Text scramble**: mono `.eyebrow` labels decode on entry (`src/js/motion.js`).
+- **WebGL hover**: ripple + RGB split on project media, one shared canvas (`src/js/hoverfx.js`).
+- **Portrait focus-pull** on the home hero (`src/js/portrait.js`).
+
+Everything is disabled under `prefers-reduced-motion`.

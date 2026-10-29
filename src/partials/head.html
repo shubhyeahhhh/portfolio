@@ -17,7 +17,11 @@
     var c = d.documentElement.classList;
     c.add('js');
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) c.add('motion');
-    setTimeout(function () { if (!window.__motionReady) c.remove('motion'); }, 2500);
+    // First visit to the home page this session: play the slate intro.
+    try {
+      if (c.contains('motion') && d.querySelector('meta[name="intro"]') && !sessionStorage.getItem('introSeen')) c.add('intro-play');
+    } catch (e) {}
+    setTimeout(function () { if (!window.__motionReady) { c.remove('motion'); c.remove('intro-play'); } }, 3500);
   })(document);
 </script>
 <script type="module" src="/src/js/main.js"></script>

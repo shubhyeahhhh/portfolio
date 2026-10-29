@@ -114,12 +114,6 @@ a:hover .link-arrow { color: var(--accent); }
   .site-header.is-open .site-nav { visibility: visible; opacity: 1; transform: none; transition-delay: 0s; }
 }
 
-/* page transition wipe */
-.wipe {
-  position: fixed; inset: 0; z-index: 90; pointer-events: none;
-  background: var(--accent); transform: scaleX(0); transform-origin: left;
-}
-
 /* ---------- media & title cards ---------- */
 .media { position: relative; overflow: hidden; border-radius: var(--radius); background: var(--ink); isolation: isolate; }
 .media--wide { aspect-ratio: 16 / 9; }

@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <meta name="intro" content="slate">
   <!-- @include partials/head.html -->
   <title>Shubham Yadav — Filmmaker, founder & tech lead · Story, engineered.</title>
   <meta name="description" content="I write, shoot and edit films that make people care — then build the website or product that turns that attention into customers. Brand films, content systems, websites.">
@@ -14,6 +15,18 @@
 </head>
 <body>
   <!-- @include partials/header.html -->
+  <div class="intro" aria-hidden="true" data-intro>
+    <div class="intro__center">
+      <span class="intro__mark" data-intro-mark><i></i><i></i><i></i><i></i><b>SY</b></span>
+      <span class="intro__name" data-intro-name>Shubham Yadav</span>
+    </div>
+    <div class="intro__bar">
+      <span class="rec rec--on-dark"><span class="rec__dot"></span>Scene 01 · Take 01</span>
+      <span class="intro__tc" data-intro-tc>00:00:00:00</span>
+      <span>Story, engineered.</span>
+    </div>
+    <span class="intro__progress" data-intro-progress></span>
+  </div>
 
   <main id="main">
     <!-- HERO -->
@@ -57,6 +70,13 @@
       </div>
     </section>
 
+    <!-- ROLES TICKER (speed follows scroll velocity) -->
+    <div class="marquee" aria-hidden="true" data-marquee>
+      <div class="marquee__track" data-marquee-track>
+        <span>Brand films</span><i></i><span class="marquee__ghost">Founder stories</span><i></i><span>Content systems</span><i></i><span class="marquee__ghost">Video essays</span><i></i><span>Websites</span><i></i><span class="marquee__ghost">Product MVPs</span><i></i>
+      </div>
+    </div>
+
     <!-- SELECTED WORK -->
     <section class="wrap section stack-l" id="work">
       <div class="section-head">
@@ -67,7 +87,7 @@
         <a class="link-arrow" href="/work/">All projects</a>
       </div>
       <!-- @projects featured -->
-      <div class="grid-cards grid-cards--2">
+      <div class="grid-cards grid-cards--2" data-velocity>
         <!-- @projects grid -->
       </div>
     </section>

@@ -3,9 +3,12 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
+import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
 import Lenis from 'lenis';
+import { playIntro } from './intro.js';
+import { initVelocity } from './velocity.js';
 
-gsap.registerPlugin(ScrollTrigger, SplitText);
+gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin);
 
 export const motionEnabled = () => document.documentElement.classList.contains('motion');
 
@@ -32,7 +35,7 @@ function initSmoothScroll() {
 
 // Headlines rise line by line from a mask.
 function initSplits() {
-  gsap.utils.toArray('[data-split]').forEach((el) => {
+  gsap.utils.toArray('[data-split]').forEach((el, i) => {
     const split = SplitText.create(el, { type: 'lines', mask: 'lines', linesClass: 'split-line', aria: 'auto' });
     gsap.set(el, { visibility: 'visible' });
     gsap.from(split.lines, {
@@ -40,6 +43,7 @@ function initSplits() {
       duration: 0.9,
       ease: 'expo.out',
       stagger: 0.07,
+      delay: i === 0 ? 0.05 : 0,
       scrollTrigger: { trigger: el, start: 'top 88%', once: true },
     });
   });
@@ -69,6 +73,28 @@ function initUnclip() {
   });
 }
 
+// Mono labels decode like a terminal readout as they enter.
+function initScramble() {
+  const chars = '01#/_<>-·:';
+  gsap.utils.toArray('.eyebrow, [data-scramble]').forEach((el) => {
+    if (el.closest('.site-header, [data-intro]') || el.children.length) return;
+    const text = el.textContent;
+    if (!text.trim()) return;
+    el.setAttribute('aria-label', text.trim());
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 92%',
+      once: true,
+      onEnter: () =>
+        gsap.to(el, {
+          duration: Math.min(1.1, 0.35 + text.length * 0.02),
+          scrambleText: { text, chars, speed: 0.6, revealDelay: 0.15 },
+          onComplete: () => el.removeAttribute('aria-label'),
+        }),
+    });
+  });
+}
+
 function initCounters() {
   gsap.utils.toArray('[data-count]').forEach((el) => {
     const end = Number(el.dataset.count);
@@ -94,11 +120,14 @@ export function initMotion() {
   initSmoothScroll();
   // Wait for web fonts so line splits match the final layout.
   const ready = document.fonts?.ready ?? Promise.resolve();
-  ready.then(() => {
+  // The opening slate (home, first visit) plays before anything on screen animates.
+  Promise.all([ready, playIntro()]).then(() => {
     initSplits();
     initReveals();
     initUnclip();
     initCounters();
+    initScramble();
+    initVelocity(lenis);
     window.__motionReady = true;
     ScrollTrigger.refresh();
   });

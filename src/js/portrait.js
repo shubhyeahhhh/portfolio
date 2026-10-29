@@ -1,6 +1,6 @@
-// Portrait "focus pull": on hover the frame drops to soft monochrome, a sharp
-// full-colour lens follows the pointer, the rim light tracks it, the frame tilts,
-// the viewfinder brackets snap in and a REC timecode runs at 24 fps.
+// Portrait "Story → System": on hover a lens follows the pointer and reveals the
+// wireframe/code version of the same portrait underneath (aligned 1:1), the rim
+// light tracks it, the frame tilts, the brackets snap in and a REC timecode runs.
 // Mouse/pen only — touch keeps the plain colour portrait.
 export function initPortrait(root) {
   if (!root) return;
@@ -44,7 +44,7 @@ export function initPortrait(root) {
   frame.addEventListener('pointerenter', (e) => {
     if (e.pointerType === 'touch') return;
     root.classList.add('is-active');
-    hintEl.textContent = '● Recording';
+    hintEl.textContent = '● System view';
     point(e);
     cancelAnimationFrame(raf);
     raf = requestAnimationFrame(tick);
@@ -54,7 +54,7 @@ export function initPortrait(root) {
   });
   frame.addEventListener('pointerleave', () => {
     root.classList.remove('is-active');
-    hintEl.textContent = 'Hover to pull focus';
+    hintEl.textContent = 'Hover to see the system';
     cancelAnimationFrame(raf);
     ['--rx', '--ry', '--shift-x', '--shift-y', '--x', '--y'].forEach((p) => frame.style.removeProperty(p));
   });

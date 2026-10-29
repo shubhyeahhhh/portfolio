@@ -45,6 +45,7 @@ All motion respects `prefers-reduced-motion`.
 - **Scroll velocity**: roles ticker speed/direction and a slight lean on `[data-velocity]` blocks (`src/js/velocity.js`).
 - **Text scramble**: mono `.eyebrow` labels decode on entry (`src/js/motion.js`).
 - **WebGL hover**: ripple + RGB split on project media, one shared canvas (`src/js/hoverfx.js`).
+- **Motion-graphic thumbnails**: until a project has a poster/loop, its card runs a live generative motif (`motif` in `projects.json`: `evolution`, `mechanism`, `timeline`, `network`, `growth` — see `src/js/motifs.js`). Only on-screen cards animate.
 - **Portrait focus-pull** on the home hero (`src/js/portrait.js`).
 
 Everything is disabled under `prefers-reduced-motion`.

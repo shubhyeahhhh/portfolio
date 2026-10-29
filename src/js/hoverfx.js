@@ -48,12 +48,11 @@ const TONES = {
   teal: { a: '#15282a', b: '#111b1d', c: '#0d1013', glow: 'rgba(63,193,176,0.25)', gx: 0.8, gy: 0.1 },
 };
 
-function drawTitleCard(media, card) {
+function drawTitleCard(media, card, cv = document.createElement('canvas')) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const box = media.getBoundingClientRect();
   const w = Math.round(box.width * dpr), h = Math.round(box.height * dpr);
-  const cv = document.createElement('canvas');
-  cv.width = w; cv.height = h;
+  if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
   const ctx = cv.getContext('2d');
   const tone = TONES[(card.className.match(/titlecard--(\w+)/) || [])[1]] || TONES.night;
 
@@ -63,6 +62,15 @@ function drawTitleCard(media, card) {
   const rad = ctx.createRadialGradient(w * tone.gx, h * tone.gy, 0, w * tone.gx, h * tone.gy, Math.max(w, h) * 0.75);
   rad.addColorStop(0, tone.glow); rad.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = rad; ctx.fillRect(0, 0, w, h);
+
+  // Live motion graphic (motifs.js), faded toward the title like its CSS mask.
+  const fx = card.querySelector('.titlecard__fx');
+  if (fx && fx.width > 1) {
+    ctx.drawImage(fx, 0, 0, w, h);
+    const fade = ctx.createLinearGradient(0, h, 0, h * 0.42);
+    fade.addColorStop(0.1, tone.c); fade.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.globalAlpha = 0.85; ctx.fillStyle = fade; ctx.fillRect(0, h * 0.42, w, h * 0.58); ctx.globalAlpha = 1;
+  }
 
   // Re-set the card's text exactly where the DOM put it.
   const drawText = (el, color) => {
@@ -134,6 +142,7 @@ export function initHoverFx() {
   const state = { hover: 0, mx: 0.5, my: 0.5, tx: 0.5, ty: 0.5 };
   let active = null; // the .media element the canvas currently lives in
   let source = null; // image/video/canvas used as the texture
+  let live = null; // title card with a live motif: recomposited every frame
   let raf = 0;
   const cache = new WeakMap();
 
@@ -145,6 +154,7 @@ export function initHoverFx() {
     state.mx += (state.tx - state.mx) * 0.12;
     state.my += (state.ty - state.my) * 0.12;
     if (source instanceof HTMLVideoElement && source.readyState >= 2) upload();
+    else if (live) { drawTitleCard(active, live, source); upload(); }
     gl.uniform2f(u.uMouse, state.mx, 1 - state.my);
     gl.uniform1f(u.uHover, state.hover);
     gl.uniform1f(u.uTime, t / 1000);
@@ -156,7 +166,8 @@ export function initHoverFx() {
     const img = media.querySelector('img, video');
     const card = media.querySelector('.titlecard');
     if (img && img.tagName === 'IMG' && !img.complete) return false;
-    if (!cache.has(media) || img?.tagName === 'VIDEO') cache.set(media, img || (card && drawTitleCard(media, card)));
+    live = !img && card && card.querySelector('.titlecard__fx') ? card : null;
+    if (!cache.has(media) || img?.tagName === 'VIDEO' || live) cache.set(media, img || (card && drawTitleCard(media, card, cache.get(media))));
     source = cache.get(media);
     if (!source) return false;
 

@@ -1,5 +1,6 @@
 // /work: type filters, list ↔ grid view, and the hover preview beside the list.
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { mountMotifs } from './motifs.js';
 
 export function initWork(root) {
   if (!root) return;
@@ -19,6 +20,7 @@ export function initWork(root) {
     previewText.replaceChildren(text);
     previewMedia.replaceChildren(tpl);
     previewMedia.querySelector('video')?.play().catch(() => {});
+    mountMotifs(previewMedia);
   };
 
   const firstVisible = () => [...rows.querySelectorAll('.row')].find((r) => !r.hidden);

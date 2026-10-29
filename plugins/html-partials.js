@@ -37,7 +37,9 @@ export default function htmlPartials({ root }) {
     if (p.media?.poster) {
       return `<img class="media__img" src="${esc(p.media.poster)}" alt="" loading="${loading}" decoding="async">`;
     }
+    // Live motion graphic per project (src/js/motifs.js) until real media exists.
     return `<div class="titlecard titlecard--${esc(p.tone || 'night')}" aria-hidden="true">
+      ${p.motif ? `<canvas class="titlecard__fx" data-motif="${esc(p.motif)}" data-tone="${esc(p.tone || 'night')}"></canvas>` : ''}
       <span class="titlecard__meta">${esc(metaLine(p))}</span>
       <span class="titlecard__title">${esc(p.title)}</span>
     </div>`;

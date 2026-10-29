@@ -14,11 +14,13 @@ import { initContact } from './contact.js';
 import { initMedia } from './media.js';
 import { initCursor } from './cursor.js';
 import { initHoverFx } from './hoverfx.js';
+import { mountMotifs } from './motifs.js';
 
 const boot = () => {
   initNav();
   initTransitions();
   initMedia();
+  mountMotifs();
   initPortrait(document.querySelector('[data-portrait]'));
   initWork(document.querySelector('[data-work]'));
   initContact(document.querySelector('[data-brief]'));

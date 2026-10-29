@@ -9,8 +9,12 @@
     "line": "My debut short film — what it feels like to change from the inside.",
     "summary": "My debut short film — what it feels like to change from the inside. I wrote it, directed it and cut it.",
     "tone": "ember",
+    "motif": "evolution",
     "href": "/work/existential-evolution/",
-    "media": { "poster": "", "loop": "" },
+    "media": {
+      "poster": "",
+      "loop": ""
+    },
     "metrics": [],
     "sections": []
   },
@@ -22,8 +26,12 @@
     "year": "2024–25",
     "line": "Led engineering for prosthetics that give people their day back.",
     "tone": "steel",
+    "motif": "mechanism",
     "href": "",
-    "media": { "poster": "", "loop": "" }
+    "media": {
+      "poster": "",
+      "loop": ""
+    }
   },
   {
     "slug": "baakhapaa",
@@ -33,8 +41,12 @@
     "year": "2023–now",
     "line": "Runs the content engine end to end — video essays, graphics and the calendar behind them.",
     "tone": "amber",
+    "motif": "timeline",
     "href": "",
-    "media": { "poster": "", "loop": "" }
+    "media": {
+      "poster": "",
+      "loop": ""
+    }
   },
   {
     "slug": "praatik-hires",
@@ -44,8 +56,12 @@
     "year": "2024",
     "line": "Turned hiring into a story people want to be part of.",
     "tone": "night",
+    "motif": "network",
     "href": "",
-    "media": { "poster": "", "loop": "" }
+    "media": {
+      "poster": "",
+      "loop": ""
+    }
   },
   {
     "slug": "growthgates",
@@ -55,7 +71,11 @@
     "year": "2025",
     "line": "Built a community where growing a business feels like a team sport.",
     "tone": "teal",
+    "motif": "growth",
     "href": "",
-    "media": { "poster": "", "loop": "" }
+    "media": {
+      "poster": "",
+      "loop": ""
+    }
   }
 ]

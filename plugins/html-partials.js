@@ -119,6 +119,25 @@ export default function htmlPartials({ root }) {
     },
   };
 
+  // What each credited role covered — describes the job, not invented project facts.
+  const ROLE_NOTES = {
+    Writer: 'The script, the structure and the question at the centre of it.',
+    Director: 'Performance, camera and the look of every frame.',
+    Editor: 'Rhythm, colour and sound — the film is finally written in the cut.',
+    'Co-founder': 'Strategy, brand and the story the company tells about itself.',
+    CTO: 'Architecture, the engineering team and shipping the product.',
+    'Content lead': 'The calendar, the formats and every edit that goes out.',
+  };
+  function craft(p) {
+    const roles = (p.role || '').split('·').map((r) => r.trim()).filter((r) => ROLE_NOTES[r]);
+    if (!roles.length) return '';
+    return `<div class="stack-m"><div class="stack-s"><span class="eyebrow eyebrow--accent">The craft</span>
+      <h2 class="h-section h-section--s" data-split>${roles.length > 1 ? `${roles.length} jobs, one person.` : 'What I did.'}</h2></div>
+      <div class="grid-3">${roles
+        .map((r, n) => `<div class="story__item" data-reveal><span class="eyebrow">0${n + 1}</span><h3 class="h-card">${esc(r)}</h3><p class="card__line">${esc(ROLE_NOTES[r])}</p></div>`)
+        .join('')}</div></div>`;
+  }
+
   function renderCase(slug, projects, site) {
     const i = projects.findIndex((p) => p.slug === slug);
     if (i < 0) throw new Error(`[html-partials] unknown case study "${slug}"`);
@@ -162,7 +181,8 @@ export default function htmlPartials({ root }) {
     ${
       sections
         ? `<section class="wrap section story">${sections}</section>`
-        : `<section class="wrap section">
+        : `<section class="wrap section stack-l">
+            ${craft(p)}
             <div class="note" data-reveal>
               <span class="eyebrow">The full write-up</span>
               <p class="h-card h-card--lg">The behind-the-scenes story of this ${esc(p.type.toLowerCase())} is being edited.</p>
@@ -172,7 +192,7 @@ export default function htmlPartials({ root }) {
     }
     ${metrics ? `<section class="wrap section"><span class="eyebrow">What it did</span><dl class="metrics">${metrics}</dl></section>` : ''}
     <section class="band band--ink">
-      <div class="wrap cta">
+      <div class="wrap section cta">
         <h2 class="h-section">Your brand has a story like this. Let's film it.</h2>
         <a class="btn btn--accent btn--lg" href="${esc(site.bookingUrl)}">Book a 20-min intro call →</a>
       </div>

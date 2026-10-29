@@ -3,14 +3,21 @@
 import { gsap } from 'gsap';
 import { motionEnabled } from './motion.js';
 
+// sessionStorage can throw (private mode, sandboxed frames) — never let that break navigation.
+const store = {
+  get: (k) => { try { return sessionStorage.getItem(k); } catch { return null; } },
+  set: (k, v) => { try { sessionStorage.setItem(k, v); } catch { /* ignore */ } },
+  del: (k) => { try { sessionStorage.removeItem(k); } catch { /* ignore */ } },
+};
+
 export function initTransitions() {
   const wipe = document.querySelector('[data-wipe]');
   if (!wipe || !motionEnabled()) return;
 
   // Arriving: uncover the new page.
   const reveal = () => gsap.fromTo(wipe, { scaleX: 1, transformOrigin: 'right' }, { scaleX: 0, duration: 0.45, ease: 'expo.inOut', delay: 0.05 });
-  if (sessionStorage.getItem('wipe') === '1') {
-    sessionStorage.removeItem('wipe');
+  if (store.get('wipe') === '1') {
+    store.del('wipe');
     reveal();
   }
   // Back/forward cache restores the page mid-wipe; reset it.
@@ -29,7 +36,7 @@ export function initTransitions() {
     if (/\.(jpe?g|png|webp|pdf|mp4|zip)$/i.test(url.pathname)) return;
 
     e.preventDefault();
-    sessionStorage.setItem('wipe', '1');
+    store.set('wipe', '1');
     gsap.fromTo(
       wipe,
       { scaleX: 0, transformOrigin: 'left' },

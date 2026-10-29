@@ -1,0 +1,61 @@
+[
+  {
+    "slug": "existential-evolution",
+    "featured": true,
+    "title": "Existential Evolution",
+    "type": "Film",
+    "role": "Writer · Director · Editor",
+    "year": "",
+    "line": "My debut short film — what it feels like to change from the inside.",
+    "summary": "My debut short film — what it feels like to change from the inside. I wrote it, directed it and cut it.",
+    "tone": "ember",
+    "href": "/work/existential-evolution/",
+    "media": { "poster": "", "loop": "" },
+    "metrics": [],
+    "sections": []
+  },
+  {
+    "slug": "sahara-prosthetics",
+    "title": "Sahara Prosthetics",
+    "type": "Product",
+    "role": "CTO · Product & engineering",
+    "year": "2024–25",
+    "line": "Led engineering for prosthetics that give people their day back.",
+    "tone": "steel",
+    "href": "",
+    "media": { "poster": "", "loop": "" }
+  },
+  {
+    "slug": "baakhapaa",
+    "title": "Baakhapaa",
+    "type": "Content",
+    "role": "Content lead",
+    "year": "2023–now",
+    "line": "Runs the content engine end to end — video essays, graphics and the calendar behind them.",
+    "tone": "amber",
+    "href": "",
+    "media": { "poster": "", "loop": "" }
+  },
+  {
+    "slug": "praatik-hires",
+    "title": "Praatik Hires",
+    "type": "Content",
+    "role": "Co-founder · Brand & strategy",
+    "year": "2024",
+    "line": "Turned hiring into a story people want to be part of.",
+    "tone": "night",
+    "href": "",
+    "media": { "poster": "", "loop": "" }
+  },
+  {
+    "slug": "growthgates",
+    "title": "GrowthGates",
+    "type": "Content",
+    "role": "Co-founder · Community",
+    "year": "2025",
+    "line": "Built a community where growing a business feels like a team sport.",
+    "tone": "teal",
+    "href": "",
+    "media": { "poster": "", "loop": "" }
+  }
+]

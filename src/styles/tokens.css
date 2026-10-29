@@ -1,0 +1,36 @@
+/* Design tokens — "Story, engineered." (see the Style guide board on the design canvas) */
+:root {
+  /* colour */
+  --paper: #ffffff;
+  --mist: #f3f4f6;
+  --mist-soft: #fafafa;
+  --line: #e2e4e8;
+  --line-strong: #c9ccd2;
+  --graphite: #5b606b;   /* labels & meta — 6.4:1 on paper */
+  --body: #3a3e46;       /* long copy */
+  --dim: #7f8590;        /* second line of display type (large text only) */
+  --ink: #0e0f12;
+  --navy: #0b1220;       /* portrait ground */
+  --accent: #d42a14;     /* tally red — CTAs and status only */
+  --accent-hover: #b8230f;
+  --warm: #ff8a4c;       /* rim-light orange, on dark only */
+
+  /* type */
+  --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* layout */
+  --wrap: 1280px;
+  --gutter: clamp(16px, 4vw, 48px);
+  --section: clamp(64px, 9vw, 120px);
+  --radius: 12px;
+  --radius-l: 16px;
+
+  /* motion (named, as in the style guide) */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-snap: 200ms;
+  --dur-ui: 300ms;
+  --dur-reveal: 800ms;
+}

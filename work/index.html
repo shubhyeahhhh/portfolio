@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- @include partials/head.html -->
+  <title>Work — Shubham Yadav</title>
+  <meta name="description" content="Films, brands and builds by Shubham Yadav: Existential Evolution, Sahara Prosthetics, Baakhapaa, Praatik Hires and GrowthGates.">
+  <meta property="og:title" content="Work — Shubham Yadav">
+  <meta property="og:description" content="Films, brands and builds — written, shot, run or engineered by one person.">
+  <meta property="og:url" content="{{site.url}}/work/">
+  <link rel="canonical" href="{{site.url}}/work/">
+</head>
+<body>
+  <!-- @include partials/header.html active=work -->
+
+  <main id="main" data-work>
+    <section class="wrap page-head">
+      <div class="stack-s">
+        <span class="eyebrow eyebrow--accent">SC.01 — All work · 2023 — now</span>
+        <h1 class="display display--xl" data-split>Work<sup class="count" data-count-total>(5)</sup></h1>
+      </div>
+      <p class="page-head__aside" data-reveal>Films, brands and builds. Every project here was written, shot, run or engineered by me — usually more than one of those.</p>
+    </section>
+
+    <div class="wrap">
+      <div class="toolbar">
+        <div class="chips" role="group" aria-label="Filter by type" data-filters>
+          <button class="chip" type="button" aria-pressed="true" data-filter="All">All</button>
+          <button class="chip" type="button" aria-pressed="false" data-filter="Film">Film</button>
+          <button class="chip" type="button" aria-pressed="false" data-filter="Content">Content</button>
+          <button class="chip" type="button" aria-pressed="false" data-filter="Product">Product</button>
+        </div>
+        <div class="chips" role="group" aria-label="View" data-views>
+          <button class="chip chip--square" type="button" aria-pressed="true" data-view="list">List</button>
+          <button class="chip chip--square" type="button" aria-pressed="false" data-view="grid">Grid</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="wrap work-list" data-view-panel="list">
+      <div class="rows" data-rows>
+        <!-- @projects list -->
+      </div>
+      <aside class="preview" aria-hidden="true" data-preview>
+        <div class="preview__media media media--frame" data-preview-media></div>
+        <div class="preview__text" data-preview-text></div>
+      </aside>
+    </section>
+
+    <section class="wrap section grid-cards grid-cards--loose" data-view-panel="grid" hidden>
+      <!-- @projects cards -->
+    </section>
+
+    <p class="wrap empty" data-empty hidden>Nothing in this category yet — <a href="/contact/">yours could be the first</a>.</p>
+
+    <section class="band band--ink">
+      <div class="wrap section cta">
+        <h2 class="h-section" data-split>Project number six could be yours.</h2>
+        <a class="btn btn--accent btn--lg" href="{{site.bookingUrl}}">Start a project →</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- @include partials/footer.html -->
+</body>
+</html>

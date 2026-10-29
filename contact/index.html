@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- @include partials/head.html -->
+  <title>Contact — Book an intro call · Shubham Yadav</title>
+  <meta name="description" content="Tell Shubham Yadav what you're building. Brand films, content systems and websites — reply within {{site.responseTime}}.">
+  <meta property="og:title" content="Contact — Shubham Yadav">
+  <meta property="og:description" content="Tell me what you're building.">
+  <meta property="og:url" content="{{site.url}}/contact/">
+  <link rel="canonical" href="{{site.url}}/contact/">
+</head>
+<body>
+  <!-- @include partials/header.html active=contact -->
+
+  <main id="main">
+    <section class="wrap contact">
+      <div class="contact__intro stack-m">
+        <span class="rec"><span class="rec__dot"></span>SC.06 — Your scene · {{site.availability}}</span>
+        <h1 class="display display--m" data-split>Tell me what you're building.</h1>
+        <p class="lede" data-reveal>Two minutes on the form is all it takes. You'll hear back within {{site.responseTime}} with honest next steps — even if I'm not the right fit.</p>
+        <div class="contact__lines" data-reveal>
+          <a href="mailto:{{site.email}}"><span class="eyebrow">Email</span><span>{{site.email}}</span></a>
+          <a href="https://linkedin.com/in/shubhamcreations" target="_blank" rel="noopener"><span class="eyebrow">LinkedIn</span><span>in/shubhamcreations</span></a>
+          <a href="https://instagram.com/shubhyeahh" target="_blank" rel="noopener"><span class="eyebrow">Instagram</span><span>@shubhyeahh</span></a>
+        </div>
+      </div>
+
+      <div class="contact__panel">
+        <form class="brief" name="brief" method="POST" action="/contact/thanks/" data-netlify="true" netlify-honeypot="company_url" data-brief>
+          <input type="hidden" name="form-name" value="brief">
+          <p class="sr-only"><label>Leave this empty <input name="company_url" tabindex="-1" autocomplete="off"></label></p>
+
+          <fieldset class="brief__group">
+            <legend class="eyebrow">01 — What do you need? <span class="muted">Pick any</span></legend>
+            <div class="chips">
+              <label class="chip chip--check"><input type="checkbox" name="needs" value="Brand film" checked><span>Brand film</span></label>
+              <label class="chip chip--check"><input type="checkbox" name="needs" value="Content system"><span>Content system</span></label>
+              <label class="chip chip--check"><input type="checkbox" name="needs" value="Website / product"><span>Website / product</span></label>
+              <label class="chip chip--check"><input type="checkbox" name="needs" value="Not sure yet"><span>Not sure yet</span></label>
+            </div>
+          </fieldset>
+
+          <div class="brief__grid">
+            <label class="field"><span>Your name</span><input type="text" name="name" autocomplete="name" required></label>
+            <label class="field"><span>Email</span><input type="email" name="email" autocomplete="email" required></label>
+            <label class="field"><span>Company or brand <em>optional</em></span><input type="text" name="company" autocomplete="organization"></label>
+            <label class="field"><span>Ideal launch date <em>optional</em></span><input type="text" name="timeline" placeholder="e.g. March, or as soon as possible"></label>
+          </div>
+
+          <label class="field"><span>Rough budget <em>optional</em></span><input type="text" name="budget" placeholder="A range is fine — it helps me suggest the right scope"></label>
+
+          <label class="field"><span>02 — The story so far</span><textarea name="message" rows="5" required placeholder="What are you building, who is it for, and what should people feel or do after seeing it?"></textarea></label>
+
+          <div class="brief__foot">
+            <span class="muted">No spam, no sales sequence — just a reply from me.</span>
+            <button class="btn btn--accent btn--lg" type="submit" data-submit>Send brief →</button>
+          </div>
+          <p class="brief__error" role="alert" hidden data-error>That didn't send. Please try again, or email <a href="mailto:{{site.email}}">{{site.email}}</a>.</p>
+        </form>
+
+        <div class="brief-done" role="status" tabindex="-1" hidden data-done>
+          <span class="rec"><span class="rec__dot"></span>Cut — that's a take</span>
+          <h2 class="h-section">Brief received.</h2>
+          <p class="body-l">I'll read it properly and reply within {{site.responseTime}}. In the meantime, here's the work that might be most like yours.</p>
+          <div class="btn-row"><a class="btn btn--ink" href="/work/">Browse the work</a></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- @include partials/footer.html -->
+</body>
+</html>

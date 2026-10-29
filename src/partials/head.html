@@ -1,0 +1,23 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{site.name}}">
+<meta property="og:image" content="{{site.url}}/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter+Tight:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
+<script>
+  // Hide animated elements only when motion will actually run; un-hide if the JS never boots.
+  (function (d) {
+    var c = d.documentElement.classList;
+    c.add('js');
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) c.add('motion');
+    setTimeout(function () { if (!window.__motionReady) c.remove('motion'); }, 2500);
+  })(document);
+</script>
+<script type="module" src="/src/js/main.js"></script>

@@ -1,0 +1,27 @@
+<footer class="site-footer">
+  <div class="wrap site-footer__top">
+    <p class="site-footer__signoff">{{site.signoff}}</p>
+    <div class="site-footer__cols">
+      <nav class="stack-xs" aria-label="Footer">
+        <span class="eyebrow">Pages</span>
+        <a href="/work/">Work</a>
+        <a href="/services/">Services</a>
+        <a href="/about/">About</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+      <div class="stack-xs">
+        <span class="eyebrow">Say hello</span>
+        <a href="mailto:{{site.email}}">{{site.email}}</a>
+        <span class="muted">{{site.location}}</span>
+      </div>
+      <div class="stack-xs">
+        <span class="eyebrow">Elsewhere</span>
+        <!-- @socials -->
+      </div>
+    </div>
+  </div>
+  <div class="wrap site-footer__bottom">
+    <span>© {{year}} {{site.name}}</span>
+    <span class="mono">{{site.tagline}}</span>
+  </div>
+</footer>

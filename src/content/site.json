@@ -1,0 +1,29 @@
+{
+  "name": "Shubham Yadav",
+  "tagline": "Story, engineered.",
+  "signoff": "Built with code. Sold with stories.",
+  "roles": "Filmmaker · Founder · Tech lead",
+  "url": "https://yadavshubham.com.np",
+  "email": "baakhapaa@gmail.com",
+  "bookingUrl": "/contact/",
+  "availability": "Booking new projects",
+  "location": "Remote & on location",
+  "responseTime": "two working days",
+  "rates": {
+    "film": "Fixed quote after a 20-min call",
+    "content": "Monthly retainer",
+    "build": "Fixed quote after a 20-min call"
+  },
+  "socials": [
+    { "label": "Instagram", "handle": "@shubhyeahh", "url": "https://instagram.com/shubhyeahh" },
+    { "label": "Instagram", "handle": "@shubheffects", "url": "https://instagram.com/shubheffects" },
+    { "label": "LinkedIn", "handle": "in/shubhamcreations", "url": "https://linkedin.com/in/shubhamcreations" }
+  ],
+  "stats": [
+    { "value": 250, "suffix": "+", "label": "videos produced" },
+    { "value": 4, "suffix": "+", "label": "companies co-founded" },
+    { "value": 6, "suffix": "+", "label": "years making content" },
+    { "value": 3, "suffix": "+", "label": "years leading content" }
+  ],
+  "testimonials": []
+}
